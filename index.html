@@ -114,6 +114,53 @@ td.cur{outline:2px solid var(--seam);outline-offset:-2px;font-weight:600}
 .out dt,.out .k{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:var(--muted)}
 .out .v{font-family:var(--mono);font-weight:600;font-size:22px;font-variant-numeric:tabular-nums;color:var(--grass)}
 
+/* 매니저 게임 */
+.game{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:20px;display:flex;flex-direction:column;gap:16px}
+.g-meta{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+.g-meta b{color:var(--grass);font-weight:600}
+.g-prog{height:3px;background:var(--line);border-radius:2px;overflow:hidden}
+.g-prog i{display:block;height:100%;background:var(--grass)}
+.g-board{background:var(--board);color:var(--board-ink);border-radius:6px;padding:18px;display:grid;grid-template-columns:120px minmax(0,1fr);gap:18px;align-items:center}
+.g-board.nodia{grid-template-columns:minmax(0,1fr)}
+.g-diamond{width:100%;max-width:120px;display:block}
+.g-diamond .path{fill:none;stroke:var(--board-line);stroke-width:2}
+.g-diamond .base{fill:var(--board);stroke:var(--board-dim);stroke-width:2}
+.g-diamond .base.on{fill:var(--board-ink);stroke:var(--board-ink)}
+.g-diamond .home{fill:var(--board-line)}
+.g-sit{display:flex;flex-direction:column;gap:8px;min-width:0}
+.g-line{font-family:var(--mono);font-size:12.5px;letter-spacing:.06em;color:var(--board-dim)}
+.g-line b{color:var(--board-ink);font-weight:600}
+.g-sit h3{color:var(--board-ink);font-size:20px}
+.g-sit p{font-size:15px;color:var(--board-dim)}
+.g-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.pcard{border:1px solid var(--line);border-radius:4px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;background:var(--bg)}
+.pcard h4{margin:0;font-size:14.5px;font-weight:700}
+.pcard dl{margin:0;display:grid;grid-template-columns:auto auto;gap:2px 12px;font-size:13.5px}
+.pcard dt{color:var(--muted)}
+.pcard dd{margin:0;font-family:var(--mono);text-align:right;font-variant-numeric:tabular-nums}
+.g-q{font-weight:600}
+.g-opts{display:flex;flex-direction:column;gap:8px}
+.g-opt{font:inherit;text-align:left;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:11px 14px;cursor:pointer;display:flex;justify-content:space-between;gap:12px;align-items:center}
+.g-opt:hover:not(:disabled){border-color:var(--grass)}
+.g-opt small{color:var(--muted);font-size:13px}
+.g-opt:disabled{cursor:default}
+.g-opt.chosen{border:2px solid var(--ink)}
+.g-opt.best{border-color:var(--grass);background:var(--grass-soft)}
+.g-opt .badge{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--grass);white-space:nowrap}
+.g-fb{display:flex;flex-direction:column;gap:14px;border-top:1px dashed var(--line);padding-top:16px}
+.g-verdict{font-size:20px;font-weight:700;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.g-verdict span{font-family:var(--mono);font-size:15px;color:var(--grass)}
+.g-verdict.bad{color:var(--seam)}
+.g-roll{font-size:15px;background:var(--bg);border-left:3px solid var(--board-dim);padding:8px 12px}
+.g-roll b{font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--muted);margin-right:8px}
+.g-tab td.mine{font-weight:600}
+.g-btn{align-self:flex-start;font:inherit;font-weight:600;color:var(--surface);background:var(--grass);border:0;border-radius:4px;padding:10px 18px;cursor:pointer}
+.g-end{display:flex;flex-direction:column;gap:14px}
+.g-total{font-family:var(--mono);font-weight:600;font-size:clamp(40px,10vw,60px);line-height:1;color:var(--grass)}
+.g-total span{font-size:16px;color:var(--muted);font-weight:400;margin-left:6px}
+@media (max-width:620px){.g-board{grid-template-columns:90px minmax(0,1fr)}}
+.game{scroll-margin-top:56px}
+
 footer{margin-top:64px;border-top:1px solid var(--line);padding-top:20px;font-size:14px;color:var(--muted);display:flex;flex-direction:column;gap:8px}
 footer ul{margin:0;padding-left:18px}
 
@@ -143,6 +190,7 @@ footer ul{margin:0;padding-left:18px}
   <li><a href="#war">종합 지표</a></li>
   <li><a href="#statcast">트래킹</a></li>
   <li><a href="#calc">계산기</a></li>
+  <li><a href="#game">매니저 게임</a></li>
   <li><a href="#scale">기준표</a></li>
   <li><a href="#caveat">주의점</a></li>
 </ul></nav>
@@ -368,6 +416,15 @@ footer ul{margin:0;padding-left:18px}
   </div>
 </section>
 
+<section id="game">
+  <h2>매니저 게임 <small>Manager's Call</small></h2>
+  <div class="prose">
+    <p>감독이 되어 11가지 상황에서 결정을 내려 보세요. 작전, 대타, 투수 교체, 타순까지 모두 세이버메트릭스로 판단할 수 있는 문제입니다. 계산에는 위의 KBO 2025 기대 득점표와, 같은 데이터로 집계한 ‘1점 이상 낼 확률’표를 씁니다.</p>
+    <p class="note">점수는 결정의 기대값으로 매깁니다. 결정 뒤에 굴리는 주사위는 일어날 수 있는 결과 하나를 보여 줄 뿐입니다. 좋은 결정도 실패할 수 있고, 나쁜 결정도 성공할 수 있습니다.</p>
+  </div>
+  <div class="game" id="g"></div>
+</section>
+
 <section id="scale">
   <h2>기준표 <small>Rules of thumb</small></h2>
   <div class="prose"><p class="note">MLB 기준의 대략적인 눈금입니다. 리그와 시즌의 득점 환경에 따라 달라지므로, 비율 지표는 가능하면 100 기준 조정 지표와 함께 보세요.</p></div>
@@ -404,6 +461,7 @@ footer ul{margin:0;padding-left:18px}
     <li><a href="https://sabr.org/sabermetrics" target="_blank" rel="noopener">SABR — A Guide to Sabermetric Research</a></li>
   </ul>
   <p>기대 득점표의 MLB 값은 톰 탱고가 공개한 2010–2015 값이고, KBO 값은 2025 KBO리그 정규시즌 720경기의 네이버 스포츠 문자중계를 직접 집계한 값입니다(55,997타석, 타격 결과 직전의 아웃·주자 상황 기준, 끝내기 가능 이닝 포함). <a href="https://yagongso.com/run-value-review/" target="_blank" rel="noopener">야구공작소</a>가 공개한 표와 칸마다 0.014점 이내로 일치합니다. wOBA 가중치와 FIP 상수는 대표적인 근삿값입니다.</p>
+  <p>매니저 게임의 ‘1점 이상 낼 확률’표와 번트 결과 분포, 타순별 타석 수도 같은 2025 KBO 문자중계로 집계했습니다. 선수 기록은 가상의 값이며, 타석당 득점 가치는 리그 wOBA .330·스케일 1.2, 레버리지 인덱스는 MLB 근삿값을 가정했습니다.</p>
 </footer>
 </div>
 
@@ -465,6 +523,210 @@ footer ul{margin:0;padding-left:18px}
     st.b=td.dataset.k.split("").map(Number); st.o=+td.dataset.o; render();
   });
   setSrc("mlb");
+
+
+  // ---- 매니저 게임 ----
+  // 판단 기준: KBO 2025 기대 득점(RE)과 1점 이상 득점 확률(P1). 둘 다 같은 문자중계 데이터로 집계.
+  (function(){
+    var KR=RE_SETS.kbo.t;
+    var KP={"000":[.284,.163,.069],"100":[.442,.277,.129],"010":[.639,.415,.220],"001":[.841,.716,.263],
+            "110":[.672,.459,.241],"101":[.847,.671,.277],"011":[.905,.723,.253],"111":[.911,.716,.350]};
+    function R(k,o){return KR[k][o];}
+    function P(k,o){return KP[k][o];}
+    function f3(x){return x.toFixed(3);}
+    function f2(x){return x.toFixed(2);}
+    function w3(x){return x.toFixed(3).replace(/^0\./,".");}
+    function pc(x){return (x*100).toFixed(1)+"%";}
+    function sg(x){return (x>=0?"+":"−")+Math.abs(x).toFixed(3);}
+    // 평균 대비 타석당 득점 가치: (wOBA − 리그 wOBA) ÷ wOBA 스케일 (리그 .330, 스케일 1.2 가정)
+    function wr(w){return (w-.330)/1.2;}
+    function ev(list,f){return list.reduce(function(s,x){return s+x[0]*f(x);},0);}
+    function pick(list){var r=Math.random(),c=0;for(var i=0;i<list.length;i++){c+=list[i][0];if(r<c)return list[i];}return list[list.length-1];}
+    function paRoll(w){
+      var obp=w+.02,r=Math.random();
+      if(r>obp) return ["유격수 땅볼 아웃","중견수 뜬공 아웃","헛스윙 삼진","2루수 직선타 아웃"][Math.floor(Math.random()*4)];
+      r/=obp; return r<.27?"볼넷":r<.75?"단타":r<.92?"2루타":"홈런";
+    }
+    function card(n,rows){return {n:n,s:rows};}
+
+    // 2025 KBO 무사 1루 번트 408회의 실제 결과(번트 직후 상황)
+    var BUNT1=[[.80,"010",1,"희생번트 성공. 1사 2루"],[.09,"110",0,"번트 안타. 무사 1·2루"],[.07,"100",1,"선행 주자가 2루에서 아웃. 1사 1루"],
+               [.02,"000",2,"번트 병살. 2사 주자 없음"],[.01,"101",0,"수비 실책. 무사 1·3루"],[.01,"011",0,"수비 실책. 무사 2·3루"]];
+    // 무사 2루 번트(가정): 성공 75%, 3루 진루 실패 15%, 내야 안타·실책 10%
+    var BUNT2=[[.75,"001",1,"희생번트 성공. 1사 3루"],[.15,"010",1,"3루 진루 실패. 1사 2루"],[.10,"110",0,"번트 안타. 무사 1·2루"]];
+
+    var b1=ev(BUNT1,function(x){return R(x[1],x[2]);}), h1=R("100",0)+wr(.335);
+    var b2p=ev(BUNT2,function(x){return P(x[1],x[2]);}), b2r=ev(BUNT2,function(x){return R(x[1],x[2]);});
+    var sb3=27/32, g3=R("010",0)-R("100",0), l3=R("100",0)-R("000",1);
+    var sb4=12/18, g4=R("010",2)-R("100",2), l4=R("100",2);
+
+    var S=[
+    {tag:"작전 · 희생번트",inn:"3회초",side:"공격",us:0,them:0,b:"100",o:0,
+     title:"초반 무사 1루, 번트를 댈까?",
+     text:"2번 타자가 들어섭니다. 리그 평균 정도의 타자이고 번트도 곧잘 댑니다.",
+     cards:[card("2번 타자",[["타율",".275"],["출루율",".350"],["wOBA",".335"]])],
+     unit:"기대 득점",fmt:f3,
+     opts:[{t:"강공",v:h1,pts:10},{t:"희생번트",v:b1,pts:2}],
+     roll:function(i){return i===0?paRoll(.335):pick(BUNT1)[3];},
+     ex:"<p>무사 1루의 기대 득점은 "+f3(R("100",0))+"점입니다. 2025 KBO에서 무사 1루 번트 408번의 실제 결과는 1사 2루 80%, 무사 1·2루 9%, 1사 1루 7%, 병살 2% 등이었습니다. 이 분포를 기대 득점표에 대입하면 번트의 기대 득점은 <b>"+f3(b1)+"점</b>으로, 타자 수준을 반영한 강공("+f3(h1)+"점)보다 약 "+f2(h1-b1)+"점 낮습니다.</p><p>아웃 하나를 주고 한 베이스를 사는 거래는 대부분 손해입니다. 경기가 많이 남은 3회에는 ‘1점’보다 ‘많은 점수’를 노려야 합니다.</p>"},
+
+    {tag:"작전 · 끝내기 번트",inn:"9회말",side:"공격",us:3,them:3,b:"010",o:0,
+     title:"9회말 동점, 무사 2루",
+     text:"1점만 내면 끝내기 승리입니다. 타석에는 수비형 유격수인 9번 타자. 번트는 팀에서 가장 잘 댑니다.",
+     cards:[card("9번 타자",[["타율",".221"],["출루율",".280"],["wOBA",".262"]])],
+     unit:"1점 이상 낼 확률",fmt:pc,
+     opts:[{t:"강공",d:"평균 타자 기준",v:P("010",0),pts:4},{t:"희생번트",v:b2p,pts:10}],
+     roll:function(i){return i===0?paRoll(.262):pick(BUNT2)[3];},
+     ex:"<p>지금 중요한 것은 기대 득점이 아니라 <b>1점이라도 낼 확률</b>입니다. 2025 KBO에서 무사 2루는 "+pc(P("010",0))+", 1사 3루는 "+pc(P("001",1))+"의 확률로 그 이닝에 1점 이상을 냈습니다. 번트 성공 75%, 3루 진루 실패 15%, 번트 안타·실책 10%로 가정하면 번트 쪽 확률은 <b>"+pc(b2p)+"</b>입니다. 강공은 평균 타자라도 "+pc(P("010",0))+"이고, 이 타자는 평균보다 훨씬 약해 실제 확률은 더 낮습니다.</p><p>반대로 기대 득점은 번트 쪽이 "+f3(b2r)+"점으로 강공("+f3(R("010",0))+"점)보다 낮습니다. 목표가 ‘많은 점수’에서 ‘딱 1점’으로 바뀌면 정답도 바뀝니다.</p>"},
+
+    {tag:"작전 · 도루",inn:"6회초",side:"공격",us:2,them:3,b:"100",o:0,
+     title:"발 빠른 주자, 무사 1루",
+     text:"대주자 출신 1루 주자가 리드를 넓힙니다. 상대 포수의 도루 저지는 리그 평균 수준입니다.",
+     cards:[card("1루 주자",[["도루 시도","32"],["성공","27"],["성공률","84%"]])],
+     unit:"기대 득점",fmt:f3,
+     opts:[{t:"타자에게 맡긴다",v:R("100",0),pts:3},{t:"도루 사인",v:sb3*R("010",0)+(1-sb3)*R("000",1),pts:10}],
+     roll:function(i){return i===0?"도루 없이 타격: "+paRoll(.330):(Math.random()<sb3?"도루 성공! 무사 2루":"도루 실패. 1사 주자 없음");},
+     ex:"<p>도루가 성공하면 무사 1루("+f3(R("100",0))+")가 무사 2루("+f3(R("010",0))+")가 되어 <b>+"+f3(g3)+"점</b>, 실패하면 1사 주자 없음("+f3(R("000",1))+")이 되어 <b>−"+f3(l3)+"점</b>입니다. 손익분기 성공률은 "+f3(l3)+" ÷ ("+f3(l3)+" + "+f3(g3)+") ≈ <b>"+(100*l3/(l3+g3)).toFixed(1)+"%</b>입니다.</p><p>이 주자의 성공률 84%는 손익분기점을 넉넉히 넘습니다. 실패의 손해가 성공의 이득보다 훨씬 크기 때문에, 도루는 성공률이 높은 주자에게만 맡겨야 합니다.</p>"},
+
+    {tag:"작전 · 2사 도루",inn:"4회말",side:"공격",us:1,them:1,b:"100",o:2,
+     title:"2사 1루, 4번 타자 타석",
+     text:"1루 주자가 뛰고 싶어 합니다. 타석에는 팀의 4번 타자가 서 있습니다.",
+     cards:[card("1루 주자",[["도루 시도","18"],["성공","12"],["성공률","67%"]]),card("4번 타자",[["wOBA",".385"]])],
+     unit:"기대 득점",fmt:f3,
+     opts:[{t:"타자에게 맡긴다",v:R("100",2),pts:10},{t:"도루 사인",v:sb4*R("010",2),pts:3}],
+     roll:function(i){return i===0?"4번 타자 타격: "+paRoll(.385):(Math.random()<sb4?"도루 성공! 2사 2루":"도루 실패. 이닝 종료, 4번 타자는 타격도 못 했습니다");},
+     ex:"<p>2사에서 도루가 성공하면 +"+f3(g4)+"점("+f3(R("100",2))+"→"+f3(R("010",2))+")이지만, 실패하면 이닝이 끝나 −"+f3(l4)+"점입니다. 손익분기 성공률은 <b>"+(100*l4/(l4+g4)).toFixed(1)+"%</b>이고, 67%로는 모자랍니다.</p><p>게다가 실패하면 이번 이닝 4번 타자의 타석이 사라집니다. 좋은 타자가 타석에 있을 때일수록 주루 모험의 비용은 커집니다.</p>"},
+
+    {tag:"대타 · 타율의 함정",inn:"7회말",side:"공격",us:2,them:4,b:"111",o:2,
+     title:"2사 만루, 대타를 낼까?",
+     text:"상대는 우완 투수. 예정 타자는 8번입니다. 벤치에 대타 후보가 둘 있습니다.",
+     cards:[card("8번 타자 (예정)",[["타율",".228"],["출루율",".290"],["장타율",".330"],["wOBA",".278"]]),
+            card("대타 A",[["타율",".312"],["출루율",".338"],["장타율",".392"],["wOBA",".322"]]),
+            card("대타 B",[["타율",".251"],["출루율",".375"],["장타율",".470"],["wOBA",".368"]])],
+     unit:"타석당 득점 가치(평균 대비)",fmt:sg,
+     opts:[{t:"8번 타자 그대로",v:wr(.278),pts:0},{t:"대타 A (타율 .312)",v:wr(.322),pts:4},{t:"대타 B (wOBA .368)",v:wr(.368),pts:10}],
+     roll:function(i){return paRoll([.278,.322,.368][i]);},
+     ex:"<p>타율은 볼넷을 세지 않고 단타와 장타를 똑같이 칩니다. 만루에서는 볼넷도 1점이고, 장타는 주자를 모두 불러들입니다. 득점 가치를 고루 반영한 wOBA로 보면 B가 .368로 가장 높습니다.</p><p>평균 타자 대비 타석당 득점 가치((wOBA − .330) ÷ 1.2)는 B "+sg(wr(.368))+", A "+sg(wr(.322))+", 8번 "+sg(wr(.278))+"점입니다. 타율 .312의 A는 출루율과 장타율이 낮아 생각보다 약합니다.</p>"},
+
+    {tag:"대타 · 작은 표본",inn:"8회초",side:"공격",us:3,them:4,b:"110",o:1,
+     title:"상대 전적을 믿을까?",
+     text:"상대 마무리는 좌완입니다. 대타 후보 두 명의 기록이 엇갈립니다.",
+     cards:[card("대타 C (우타)",[["시즌 wOBA",".298"],["이 투수 상대","6타수 4안타"],["최근 3년 좌투 상대 wOBA",".315 (420타석)"]]),
+            card("대타 D (좌타)",[["시즌 wOBA",".352"],["이 투수 상대","7타수 무안타"],["최근 3년 좌투 상대 wOBA",".331 (380타석)"]])],
+     unit:"좌투 상대 기대 wOBA",fmt:w3,
+     opts:[{t:"대타 C (상대 전적 4/6)",v:.315,pts:3},{t:"대타 D (기본 실력)",v:.331,pts:10}],
+     roll:function(i){return paRoll([.315,.331][i]);},
+     ex:"<p>6~7타석의 상대 전적은 동전을 몇 번 던진 결과와 비슷합니다. 타율 같은 결과 지표는 수백 타석이 쌓여야 실력이 드러납니다.</p><p>믿을 만한 근거는 수백 타석 규모의 좌투 상대 기록입니다. 좌타자 D는 좌투수에게 약해지지만(.352→.331) 그래도 우타자 C의 좌투 상대 기록(.315)보다 높습니다. 플래툰 이점보다 기본 실력 차이가 더 큰 경우입니다.</p>"},
+
+    {tag:"수비 · 고의4구",inn:"6회말",side:"수비",us:3,them:2,b:"010",o:1,
+     title:"4번 타자를 거를까?",
+     text:"상대 4번은 리그 최고 수준의 강타자이고, 다음 5번은 평범 이하입니다.",
+     cards:[card("상대 4번",[["wOBA",".412"]]),card("상대 5번",[["wOBA",".298"]])],
+     unit:"예상 실점",fmt:f3,low:true,
+     opts:[{t:"정면 승부",v:R("010",1)+wr(.412),pts:10},{t:"고의4구",v:R("110",1)+wr(.298),pts:2}],
+     roll:function(i){return i===0?"4번 타자 결과: "+paRoll(.412):"1사 1·2루, 5번 타자 결과: "+paRoll(.298);},
+     ex:"<p>고의4구를 주면 1사 2루("+f3(R("010",1))+")가 1사 1·2루("+f3(R("110",1))+")로 바뀌어 기대 실점이 <b>"+f3(R("110",1)-R("010",1))+"점</b> 늘어납니다. 4번 대신 5번을 상대해서 얻는 이득은 타석당 득점 가치 차이인 (.412 − .298) ÷ 1.2 ≈ "+f3((.412-.298)/1.2)+"점뿐입니다.</p><p>근사적으로 계산하면 정면 승부의 예상 실점은 "+f3(R("010",1)+wr(.412))+"점, 고의4구는 "+f3(R("110",1)+wr(.298))+"점입니다. 고의4구는 다음 타자가 극단적으로 약하거나, 1루를 채워 병살을 노릴 가치가 클 때만 득이 됩니다.</p>"},
+
+    {tag:"투수 교체 · FIP",inn:"6회초",side:"수비",us:5,them:2,b:"000",o:0,
+     title:"선발을 더 끌고 갈까?",
+     text:"선발은 투구 수 88개, 평균자책점 2.95로 순항 중입니다. 이번 이닝은 상대 1번부터, 선발과는 세 번째 만남입니다.",
+     cards:[card("선발",[["ERA","2.95"],["FIP","4.70"],["BABIP",".251"],["LOB%","84%"],["K%","15%"]]),
+            card("불펜 A",[["ERA","5.10"],["FIP","3.30"],["BABIP",".372"],["LOB%","63%"],["K%","27%"]]),
+            card("불펜 B",[["ERA","3.05"],["FIP","4.90"],["BABIP",".262"],["LOB%","80%"],["K%","14%"]])],
+     unit:"이닝당 예상 실점",fmt:f2,low:true,
+     opts:[{t:"선발 유지",v:(4.70+.45)/9,pts:2},{t:"불펜 A (FIP 3.30)",v:3.30/9,pts:10},{t:"불펜 B (ERA 3.05)",v:4.90/9,pts:3}],
+     roll:function(i){var m=[(4.70+.45)/9,3.30/9,4.90/9][i],r=Math.random();return r<Math.exp(-1.6*m)?"삼자범퇴":r<.9?"1실점":"2실점";},
+     ex:"<p>ERA에는 수비와 운이 섞여 있습니다. 선발의 BABIP .251과 LOB% 84%는 리그 평균(약 .300, 72%)에서 크게 벗어나 있어 운이 좋았을 가능성이 높습니다. 실력에 더 가까운 값은 FIP 4.70입니다. 불펜 A는 반대로 BABIP .372의 불운 때문에 ERA가 부풀었지만, FIP 3.30과 K% 27%를 보면 실제 구위는 팀 최고입니다. 불펜 B는 ERA는 좋지만 FIP가 선발과 비슷합니다.</p><p>게다가 타순이 세 바퀴째 도는 선발은 타자들이 공에 익숙해져 불리해집니다. 이 게임에서는 9이닝당 약 0.45점을 더했습니다. FIP ÷ 9로 이닝당 예상 실점을 계산하면 선발 "+f2((4.70+.45)/9)+", 불펜 A "+f2(3.30/9)+", 불펜 B "+f2(4.90/9)+"점입니다.</p>"},
+
+    {tag:"불펜 · 레버리지",inn:"8회초",side:"수비",us:4,them:2,b:"111",o:1,
+     title:"마무리를 지금 쓸까?",
+     text:"1사 만루 위기에 상대 3·4번 타자가 이어집니다. 불펜에는 마무리와 셋업맨이 대기 중입니다.",
+     cards:[card("마무리",[["FIP","2.60"],["K%","31%"]]),card("셋업맨",[["FIP","4.20"],["K%","19%"]])],
+     unit:"마무리가 던지는 순간의 LI(근삿값)",fmt:function(x){return x.toFixed(1);},
+     opts:[{t:"지금 마무리 투입",d:"9회는 셋업맨",v:3.4,pts:10},{t:"셋업맨 투입",d:"마무리는 9회 세이브 상황에",v:1.7,pts:3}],
+     roll:function(i){var r=Math.random();return i===0?(r<.62?"마무리가 무실점으로 위기를 막았습니다":r<.88?"희생플라이로 1실점, 리드는 지켰습니다":"2타점 적시타. 동점이 됐습니다"):(r<.45?"셋업맨이 무실점으로 위기를 막았습니다":r<.78?"1실점, 리드는 지켰습니다":"2타점 적시타. 동점이 됐고, 마무리는 9회에 쓸 일이 없어졌습니다");},
+     ex:"<p>레버리지 인덱스(LI)는 그 순간이 승패에 얼마나 중요한지를 나타내며, 평균이 1.0입니다. 8회 2점 앞선 1사 만루는 LI가 약 3.4로, 이 경기에서 가장 중요한 순간일 가능성이 높습니다. 2점 리드로 9회를 주자 없이 시작하는 상황은 약 1.7이고, 지금 실점하면 그 세이브 상황마저 사라집니다.</p><p>가장 좋은 투수는 ‘세이브 상황’이 아니라 ‘가장 중요한 순간’에 써야 합니다. (LI는 MLB 기준 근삿값입니다.)</p>"},
+
+    {tag:"타순",inn:"경기 전",side:"라인업",b:null,
+     title:"팀 최고 타자를 몇 번에?",
+     text:"출루와 장타를 모두 갖춘 팀 최고 타자(wOBA .400)를 몇 번 타순에 넣을까요?",
+     cards:[card("2025 KBO 타순별 기록",[["1번 경기당 타석","4.75"],["2번 경기당 타석","4.63"],["4번 경기당 타석","4.43"],["1번 주자 있는 타석","37.9%"],["2번 주자 있는 타석","46.5%"],["4번 주자 있는 타석","53.0%"]])],
+     unit:"시즌 예상 타석(144경기)",fmt:function(x){return Math.round(x)+"타석";},
+     opts:[{t:"1번",v:4.749*144,pts:6},{t:"2번",v:4.625*144,pts:10},{t:"4번",v:4.431*144,pts:5}],
+     roll:function(){return "타순 효과는 한 경기 주사위로는 드러나지 않습니다. 시즌 전체로 쌓여야 보입니다.";},
+     ex:"<p>2025 KBO에서 타순이 한 칸 내려갈 때마다 경기당 약 0.1타석씩 줄었습니다. 2번은 4번보다 경기당 0.19타석, 시즌으로 약 28타석을 더 칩니다. 1번은 타석이 가장 많지만, 1회 첫 타석이 늘 주자 없는 상황이라 주자 있는 타석이 37.9%뿐입니다. 2번은 46.5%로 4번(53.0%)과 큰 차이가 없습니다.</p><p>그래서 『The Book』은 최고 타자를 2번(또는 1·4번)에 두라고 권합니다. 다만 타순 최적화의 효과는 한 시즌 1승 안팎으로, 생각보다 작습니다.</p>"},
+
+    {tag:"주전 선택 · BABIP",inn:"시즌 중반",side:"엔트리",b:null,
+     title:"남은 시즌 주전 1루수는?",
+     text:"두 선수가 같은 기간에 비슷한 타석을 소화했습니다. 남은 시즌을 맡길 한 명을 고르세요.",
+     cards:[card("선수 A",[["타율",".348 (125타석)"],["BABIP",".412"],["통산 BABIP",".305"],["BB% / K%","5% / 24%"],["xwOBA",".301"]]),
+            card("선수 B",[["타율",".262 (130타석)"],["BABIP",".281"],["통산 BABIP",".312"],["BB% / K%","12% / 14%"],["xwOBA",".356"]])],
+     unit:"기대 wOBA(xwOBA)",fmt:w3,
+     opts:[{t:"선수 A (타율 .348)",v:.301,pts:2},{t:"선수 B (xwOBA .356)",v:.356,pts:10}],
+     roll:function(i){var m=[.301,.356][i],z=(Math.random()+Math.random()+Math.random()-1.5)*.06;return "다음 한 달 성적: wOBA "+w3(m+z);},
+     ex:"<p>A의 높은 타율은 BABIP .412에 기대고 있습니다. 통산 .305와 비교하면 타구가 운 좋게 빠졌을 가능성이 크고, 삼진은 많고 볼넷은 적습니다. B는 BABIP가 통산보다 낮아 불운했지만, 적은 표본에서도 빨리 안정되는 BB%와 K%가 훌륭하고, 타구 질로 본 xwOBA도 .356으로 높습니다.</p><p>앞으로를 예측할 때는 결과(타율)보다 과정(볼넷, 삼진, 타구 질)을 봅니다.</p>"}
+    ];
+
+    var g=document.getElementById("g"), cur=0, score=0, log=[];
+    function diamond(b){
+      if(b==null) return "";
+      var on=function(i){return b.charAt(i)==="1"?" on":"";};
+      return '<svg class="g-diamond" viewBox="0 0 120 104" aria-hidden="true"><path class="path" d="M60 92 L100 52 L60 12 L20 52 Z"/><path class="home" d="M60 100 l-6 -5 v-5 h12 v5 z"/>'+
+        '<rect class="base'+on(0)+'" x="92" y="44" width="16" height="16" transform="rotate(45 100 52)"/>'+
+        '<rect class="base'+on(1)+'" x="52" y="4" width="16" height="16" transform="rotate(45 60 12)"/>'+
+        '<rect class="base'+on(2)+'" x="12" y="44" width="16" height="16" transform="rotate(45 20 52)"/></svg>';
+    }
+    function cardsHtml(cs){
+      return cs.map(function(c){return '<div class="pcard"><h4>'+c.n+'</h4><dl>'+c.s.map(function(r){return "<dt>"+r[0]+"</dt><dd>"+r[1]+"</dd>";}).join("")+"</dl></div>";}).join("");
+    }
+    function show(){
+      var s=S[cur], line="<b>"+s.inn+"</b> · "+s.side;
+      if(s.us!=null) line+=" · 우리 <b>"+s.us+"</b> : <b>"+s.them+"</b> 상대 · "+OUTS[s.o]+" "+NAMES[s.b];
+      g.innerHTML='<div class="g-meta"><span>상황 '+(cur+1)+" / "+S.length+" · "+s.tag+'</span><span>점수 <b>'+score+"</b> / "+(cur*10)+'</span></div>'+
+        '<div class="g-prog"><i style="width:'+(100*cur/S.length)+'%"></i></div>'+
+        '<div class="g-board'+(s.b==null?" nodia":"")+'">'+diamond(s.b)+'<div class="g-sit"><div class="g-line">'+line+"</div><h3>"+s.title+"</h3><p>"+s.text+"</p></div></div>"+
+        '<div class="g-cards">'+cardsHtml(s.cards)+"</div>"+
+        '<p class="g-q">어떻게 하시겠습니까?</p>'+
+        '<div class="g-opts">'+s.opts.map(function(o,i){return '<button type="button" class="g-opt" data-i="'+i+'"><span>'+o.t+(o.d?' <small>'+o.d+"</small>":"")+'</span><span class="badge"></span></button>';}).join("")+"</div>"+
+        '<div class="g-fb" hidden aria-live="polite"></div>';
+      g.querySelectorAll(".g-opt").forEach(function(el){el.addEventListener("click",function(){choose(+el.dataset.i);});});
+    }
+    function choose(i){
+      var s=S[cur], o=s.opts[i], best=0;
+      s.opts.forEach(function(x,j){if(x.pts>s.opts[best].pts)best=j;});
+      score+=o.pts; log.push({s:s,i:i,best:best});
+      g.querySelectorAll(".g-opt").forEach(function(el,j){
+        el.disabled=true;
+        if(j===best){el.classList.add("best");el.querySelector(".badge").textContent="최선";}
+        if(j===i){el.classList.add("chosen");if(j!==best)el.querySelector(".badge").textContent="내 선택";}
+      });
+      var verdict=o.pts===10?"최선의 선택":o.pts>=5?"나쁘지 않은 선택":"아쉬운 선택";
+      var rows=s.opts.map(function(x,j){return "<tr><td"+(j===i?' class="mine"':"")+">"+x.t+(j===i?" (선택)":"")+'</td><td class="num">'+s.fmt(x.v)+'</td><td class="num">'+x.pts+"</td></tr>";}).join("");
+      var fb=g.querySelector(".g-fb"), last=cur===S.length-1;
+      fb.innerHTML='<div class="g-verdict'+(o.pts<5?" bad":"")+'">'+verdict+"<span>+"+o.pts+"점</span></div>"+
+        '<p class="g-roll"><b>주사위</b>'+s.roll(i)+"</p>"+
+        '<div class="scroll"><table class="g-tab"><thead><tr><th>선택</th><th class="num">'+s.unit+(s.low?" (낮을수록 좋음)":"")+'</th><th class="num">점수</th></tr></thead><tbody>'+rows+"</tbody></table></div>"+
+        '<div class="prose">'+s.ex+"</div>"+
+        '<button type="button" class="g-btn">'+(last?"최종 결과 보기":"다음 상황 →")+"</button>";
+      fb.hidden=false;
+      fb.querySelector(".g-btn").addEventListener("click",function(){cur++; if(cur<S.length){show();g.scrollIntoView({block:"start"});}else end();});
+      fb.querySelector(".g-btn").focus({preventScroll:true});
+    }
+    function end(){
+      var max=S.length*10, r=score/max;
+      var title=r>=.9?"단장이 탐내는 감독":r>=.7?"데이터를 읽는 감독":r>=.5?"감과 데이터 사이":"올드스쿨 감독";
+      g.innerHTML='<div class="g-end"><div class="g-meta"><span>최종 결과</span></div>'+
+        '<div class="g-total">'+score+"<span>/ "+max+"</span></div><h3>"+title+"</h3>"+
+        '<div class="scroll"><table><thead><tr><th>상황</th><th>내 선택</th><th>최선</th><th class="num">점수</th></tr></thead><tbody>'+
+        log.map(function(l){var o=l.s.opts;return "<tr><td>"+l.s.title+"</td><td>"+o[l.i].t+"</td><td>"+(l.i===l.best?"✓":o[l.best].t)+'</td><td class="num">'+o[l.i].pts+"</td></tr>";}).join("")+
+        "</tbody></table></div>"+
+        '<p class="note">점수는 결과가 아니라 결정의 기대값으로 매겼습니다. 주사위가 어떻게 굴렀든, 같은 상황이 수백 번 반복되면 기대값이 높은 결정이 이깁니다.</p>'+
+        '<button type="button" class="g-btn">다시 하기</button></div>';
+      g.querySelector(".g-btn").addEventListener("click",function(){cur=0;score=0;log=[];show();g.scrollIntoView({block:"start"});});
+      g.scrollIntoView({block:"start"});
+    }
+    show();
+  })();
 
   function n(id){var v=parseFloat(document.getElementById(id).value);return isFinite(v)?v:0;}
   function avg3(x){return isFinite(x)?x.toFixed(3).replace(/^0\./,"."):"–";}
