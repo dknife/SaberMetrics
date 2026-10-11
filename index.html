@@ -1,0 +1,470 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>세이버메트릭스 노트</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: 한 단 본문(읽기 폭) + 상단 고정 목차. 전광판(어두운 판)은 직접 조작하는 곳에만 쓴다. */
+:root{
+  --bg:#f2f6f0; --surface:#ffffff; --ink:#14231b; --muted:#56675c; --line:#cdd8cd;
+  --grass:#1c6a43; --grass-soft:#e0eee4; --seam:#c0302f;
+  --board:#12301f; --board-ink:#f3eab5; --board-dim:#8fb09a; --board-line:#2c5540;
+  --display:"Black Han Sans","IBM Plex Sans KR",sans-serif;
+  --body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0d1812; --surface:#14241b; --ink:#e5eee6; --muted:#9aad9f; --line:#293c30;
+  --grass:#62c690; --grass-soft:#1a3326; --seam:#f07166;
+  --board:#07110c; --board-ink:#f3eab5; --board-dim:#7f9d89; --board-line:#234534;
+  color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#0d1812; --surface:#14241b; --ink:#e5eee6; --muted:#9aad9f; --line:#293c30;
+  --grass:#62c690; --grass-soft:#1a3326; --seam:#f07166;
+  --board:#07110c; --board-ink:#f3eab5; --board-dim:#7f9d89; --board-line:#234534;
+  color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.75;word-break:keep-all;overflow-wrap:anywhere}
+.wrap{max-width:860px;margin:0 auto;padding-inline:20px;padding-block:0 80px}
+a{color:var(--grass)}
+:focus-visible{outline:2px solid var(--seam);outline-offset:2px}
+h1,h2,h3{text-wrap:balance;margin:0}
+p{margin:0}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* 머리 */
+header.top{padding-block:56px 28px;display:flex;flex-direction:column;gap:14px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--seam)}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,9vw,72px);line-height:1.05;letter-spacing:-.01em}
+.lede{max-width:38em;font-size:18px;color:var(--muted)}
+.lede b{color:var(--ink);font-weight:600}
+
+/* 목차 */
+nav.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-block:1px solid var(--line);margin-inline:-20px;padding-inline:20px}
+nav.toc ul{list-style:none;margin:0;padding:0;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+nav.toc a{display:block;padding:11px 10px;font-size:14px;font-weight:500;color:var(--muted);text-decoration:none;white-space:nowrap}
+nav.toc a:hover{color:var(--grass)}
+
+section{padding-top:56px;display:flex;flex-direction:column;gap:20px;scroll-margin-top:40px}
+h2{font-family:var(--display);font-weight:400;font-size:30px;line-height:1.2;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+h2 small{font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+h3{font-size:18px;font-weight:700}
+.prose{max-width:40em;display:flex;flex-direction:column;gap:12px}
+.note{font-size:14px;color:var(--muted)}
+
+/* 전광판 */
+.board{background:var(--board);color:var(--board-ink);border-radius:6px;padding:22px;display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:24px;align-items:center}
+.board h3{color:var(--board-ink);font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--board-dim)}
+.diamond{width:100%;max-width:220px;display:block;margin:0 auto}
+.diamond .path{fill:none;stroke:var(--board-line);stroke-width:2}
+.diamond .base{fill:var(--board);stroke:var(--board-dim);stroke-width:2;cursor:pointer}
+.diamond .base.on{fill:var(--board-ink);stroke:var(--board-ink)}
+.diamond .home{fill:var(--board-line);stroke:none}
+.diamond text{fill:var(--board-dim);font-family:var(--mono);font-size:9px;text-anchor:middle;pointer-events:none}
+.readout{display:flex;flex-direction:column;gap:12px;min-width:0}
+.re-big{font-family:var(--mono);font-weight:600;font-size:clamp(44px,11vw,68px);line-height:1;font-variant-numeric:tabular-nums}
+.re-big span{font-size:14px;font-weight:400;color:var(--board-dim);margin-left:8px}
+.outs{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-family:var(--mono);font-size:13px;color:var(--board-dim)}
+.outs button{font:inherit;color:var(--board-ink);background:transparent;border:1px solid var(--board-line);border-radius:3px;padding:5px 12px;cursor:pointer}
+.outs button[aria-pressed="true"]{background:var(--board-ink);color:var(--board);border-color:var(--board-ink)}
+.board p{font-size:14px;color:var(--board-dim)}
+
+/* 표 */
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+thead th{font-family:var(--mono);font-size:11.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+td.num,th.num{text-align:right;white-space:nowrap}
+tr.hit td{background:var(--grass-soft)}
+td.cur{outline:2px solid var(--seam);outline-offset:-2px;font-weight:600}
+
+/* 지표 항목 */
+.metrics{display:flex;flex-direction:column}
+.metric{display:grid;grid-template-columns:130px minmax(0,1fr);gap:6px 24px;padding-block:18px;border-top:1px solid var(--line)}
+.metric:last-child{border-bottom:1px solid var(--line)}
+.abbr{font-family:var(--mono);font-weight:600;font-size:19px;color:var(--grass);line-height:1.3}
+.abbr small{display:block;font-family:var(--body);font-weight:500;font-size:13px;color:var(--muted)}
+.metric .body{display:flex;flex-direction:column;gap:8px;min-width:0}
+.formula{font-family:var(--mono);font-size:13.5px;background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:10px 12px;overflow-x:auto;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.frac{display:inline-flex;flex-direction:column;text-align:center}
+.frac>span:first-child{border-bottom:1px solid var(--ink);padding:0 4px 2px}
+.frac>span:last-child{padding:2px 4px 0}
+
+/* 연표 */
+.timeline{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.timeline li{display:grid;grid-template-columns:64px minmax(0,1fr);gap:16px;padding-block:10px;border-top:1px solid var(--line)}
+.timeline .yr{font-family:var(--mono);font-weight:600;color:var(--seam)}
+
+/* 원칙 */
+.principles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 32px}
+.principles div{display:flex;flex-direction:column;gap:4px;border-top:2px solid var(--grass);padding-top:10px}
+.principles p{font-size:15px;color:var(--muted)}
+
+/* 계산기 */
+.calc{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:20px;display:flex;flex-direction:column;gap:16px}
+.calc-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.tag{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--muted);border:1px solid var(--line);border-radius:3px;padding:1px 6px}
+.fields{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px}
+.fields label{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--muted)}
+.fields input{font:500 15px var(--mono);width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:4px;background:var(--bg);color:var(--ink)}
+.out{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:10px;border-top:1px dashed var(--line);padding-top:14px}
+.out div{display:flex;flex-direction:column}
+.out dt,.out .k{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:var(--muted)}
+.out .v{font-family:var(--mono);font-weight:600;font-size:22px;font-variant-numeric:tabular-nums;color:var(--grass)}
+
+footer{margin-top:64px;border-top:1px solid var(--line);padding-top:20px;font-size:14px;color:var(--muted);display:flex;flex-direction:column;gap:8px}
+footer ul{margin:0;padding-left:18px}
+
+@media (max-width:620px){
+  .board{grid-template-columns:minmax(0,1fr)}
+  .metric{grid-template-columns:minmax(0,1fr)}
+  .principles{grid-template-columns:minmax(0,1fr)}
+  header.top{padding-block:36px 24px}
+}
+</style>
+
+<div class="wrap">
+
+<header class="top">
+  <div class="eyebrow">Sabermetrics · SABR + metrics</div>
+  <h1>세이버메트릭스</h1>
+  <p class="lede">야구를 <b>득점과 승리</b>라는 단위로 다시 재는 방법론입니다. 빌 제임스는 이를 “야구에 대한 객관적 지식의 탐구”라고 정의했습니다. 이 페이지는 핵심 사고방식과 주요 지표의 정의, 계산식, 읽는 법을 정리합니다.</p>
+</header>
+
+<nav class="toc" aria-label="목차"><ul>
+  <li><a href="#re">기대 득점</a></li>
+  <li><a href="#idea">사고방식</a></li>
+  <li><a href="#history">역사</a></li>
+  <li><a href="#bat">타격</a></li>
+  <li><a href="#pitch">투구</a></li>
+  <li><a href="#field">수비·주루</a></li>
+  <li><a href="#war">종합 지표</a></li>
+  <li><a href="#statcast">트래킹</a></li>
+  <li><a href="#calc">계산기</a></li>
+  <li><a href="#scale">기준표</a></li>
+  <li><a href="#caveat">주의점</a></li>
+</ul></nav>
+
+<section id="re">
+  <h2>기대 득점 <small>Run Expectancy</small></h2>
+  <div class="prose">
+    <p>세이버메트릭스의 출발점은 24가지 상황(주자 8가지 × 아웃 3가지)마다 “이닝이 끝날 때까지 평균 몇 점이 나는가”를 세어 둔 표입니다. 모든 플레이의 가치는 이 숫자가 얼마나 변했는지로 잽니다. 베이스를 눌러 주자를 놓아 보세요.</p>
+  </div>
+
+  <div class="board">
+    <svg class="diamond" viewBox="0 0 200 180" role="group" aria-label="주자 상황 선택">
+      <path class="path" d="M100 152 L164 88 L100 24 L36 88 Z"/>
+      <path class="home" d="M100 164 l-9 -8 v-8 h18 v8 z"/>
+      <rect class="base" data-b="1" x="151" y="75" width="26" height="26" transform="rotate(45 164 88)" tabindex="0" role="button" aria-pressed="false" aria-label="1루 주자"/>
+      <rect class="base" data-b="2" x="87" y="11" width="26" height="26" transform="rotate(45 100 24)" tabindex="0" role="button" aria-pressed="false" aria-label="2루 주자"/>
+      <rect class="base" data-b="3" x="23" y="75" width="26" height="26" transform="rotate(45 36 88)" tabindex="0" role="button" aria-pressed="false" aria-label="3루 주자"/>
+      <text x="164" y="122">1루</text><text x="100" y="58">2루</text><text x="36" y="122">3루</text>
+    </svg>
+    <div class="readout">
+      <h3 id="re-label">무사 주자 없음</h3>
+      <div class="re-big num"><b id="re-val">0.481</b><span>점</span></div>
+      <div class="outs" role="group" aria-label="아웃 카운트">아웃
+        <button type="button" data-o="0" aria-pressed="true">0</button>
+        <button type="button" data-o="1" aria-pressed="false">1</button>
+        <button type="button" data-o="2" aria-pressed="false">2</button>
+      </div>
+      <p>이 상황에서 이닝 종료까지 기대되는 평균 득점 (MLB 2010–2015 기준)</p>
+    </div>
+  </div>
+
+  <div class="scroll">
+    <table id="re-table">
+      <thead><tr><th>주자</th><th class="num">무사</th><th class="num">1사</th><th class="num">2사</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="prose">
+    <h3>이 표로 할 수 있는 일</h3>
+    <p><b>희생번트.</b> 무사 1루(0.859)에서 번트가 성공해 1사 2루(0.664)가 되면 기대 득점은 0.195점 줄어듭니다. 성공해도 손해이므로, 번트는 1점이 꼭 필요한 경기 후반이나 타자가 아주 약할 때만 정당화됩니다.</p>
+    <p><b>도루의 손익분기점.</b> 무사 1루에서 도루 성공은 +0.241점(→1.100), 실패는 −0.605점(→0.254)입니다. 0.605 ÷ (0.605 + 0.241) ≈ 71.5%, 즉 성공률이 약 72%를 넘어야 이득입니다.</p>
+    <p><b>RE24.</b> 타자가 타석마다 만든 기대 득점 변화량을 시즌 전체로 더한 값입니다. 상황까지 반영한 공격 기여도가 됩니다.</p>
+    <p class="note">수치는 리그 득점 환경에 따라 달라집니다. 타고투저 리그일수록 모든 칸이 커지고, 번트·도루의 손익분기점도 움직입니다.</p>
+  </div>
+</section>
+
+<section id="idea">
+  <h2>사고방식 <small>Principles</small></h2>
+  <div class="principles">
+    <div><h3>목표는 승리, 화폐는 득점</h3><p>팀은 득점을 늘리고 실점을 줄여서 이깁니다. 선수 평가도 “몇 점을 만들고 몇 점을 막았는가”로 환산합니다. MLB에서는 대략 10점이 1승에 해당합니다.</p></div>
+    <div><h3>아웃은 유한한 자원</h3><p>한 경기에 쓸 수 있는 아웃은 27개뿐입니다. 아웃을 당하지 않는 능력, 곧 출루율이 타율보다 득점과 더 밀접합니다.</p></div>
+    <div><h3>실력과 운을 분리한다</h3><p>인플레이 타구가 안타가 되는지는 수비와 운의 영향이 큽니다. 선수가 통제하는 부분(삼진, 볼넷, 홈런)을 따로 떼어 봐야 미래를 더 잘 예측합니다.</p></div>
+    <div><h3>맥락을 보정한다</h3><p>구장, 리그, 시대에 따라 같은 기록의 가치가 다릅니다. 100을 평균으로 맞춘 지표(OPS+, wRC+, ERA+)는 이 차이를 걷어낸 값입니다.</p></div>
+    <div><h3>팀 의존 기록을 경계한다</h3><p>타점과 승리는 동료가 만들어 준 기회에 좌우됩니다. 개인의 기여를 재려면 기회와 무관한 지표가 필요합니다.</p></div>
+    <div><h3>기준선은 대체 선수</h3><p>비교 대상은 평균이 아니라 언제든 구할 수 있는 2군급 선수입니다. 평균적인 선수도 구하기 어려운 만큼 가치가 있기 때문입니다.</p></div>
+  </div>
+</section>
+
+<section id="history">
+  <h2>역사 <small>Timeline</small></h2>
+  <ul class="timeline">
+    <li><span class="yr">1971</span><span>미국야구연구협회(SABR, Society for American Baseball Research) 창립. 세이버메트릭스라는 이름의 어원입니다.</span></li>
+    <li><span class="yr">1977</span><span>빌 제임스가 《Baseball Abstract》를 자비 출판하기 시작합니다. 이후 Runs Created, 피타고리안 승률 등을 제안합니다.</span></li>
+    <li><span class="yr">1984</span><span>존 손과 피트 파머의 《The Hidden Game of Baseball》. 각 이벤트에 득점 가치를 매기는 선형 가중치(Linear Weights)를 체계화합니다.</span></li>
+    <li><span class="yr">2001</span><span>보로스 맥크라켄이 DIPS 이론을 발표합니다. 투수는 인플레이 타구의 안타 여부를 거의 통제하지 못한다는 주장으로, FIP의 토대가 됩니다.</span></li>
+    <li><span class="yr">2003</span><span>마이클 루이스의 《머니볼》. 오클랜드 애슬레틱스의 출루율 중심 운영이 대중에게 알려집니다.</span></li>
+    <li><span class="yr">2007</span><span>탱고·리히트먼·돌핀의 《The Book》. wOBA가 소개되고, 이 무렵 PITCHf/x가 전 구장에 도입되어 투구 궤적 데이터가 공개됩니다.</span></li>
+    <li><span class="yr">2015</span><span>스탯캐스트 전면 도입. 타구 속도, 발사각, 주력, 수비 범위를 직접 측정하는 시대가 열립니다.</span></li>
+  </ul>
+</section>
+
+<section id="bat">
+  <h2>타격 지표 <small>Batting</small></h2>
+  <div class="prose"><p>타율은 볼넷을 무시하고 단타와 홈런을 똑같이 셉니다. 아래 지표들은 그 두 가지 결함을 차례로 고쳐 나간 결과입니다.</p></div>
+  <div class="metrics">
+    <div class="metric"><div class="abbr">OBP<small>출루율</small></div><div class="body">
+      <div class="formula"><span class="frac"><span>H + BB + HBP</span><span>AB + BB + HBP + SF</span></span></div>
+      <p>아웃을 당하지 않은 비율입니다. 단일 전통 지표 중 득점과의 상관이 가장 높습니다.</p></div></div>
+    <div class="metric"><div class="abbr">SLG<small>장타율</small></div><div class="body">
+      <div class="formula"><span class="frac"><span>1B + 2×2B + 3×3B + 4×HR</span><span>AB</span></span></div>
+      <p>타수당 루타 수입니다. 이름과 달리 비율이 아니며 최댓값은 4.000입니다.</p></div></div>
+    <div class="metric"><div class="abbr">OPS<small>출루율 + 장타율</small></div><div class="body">
+      <div class="formula">OBP + SLG</div>
+      <p>계산이 쉽고 득점 설명력이 좋아 널리 쓰입니다. 다만 분모가 다른 두 값을 더한 것이고, 출루율의 가치를 실제보다 낮게 반영합니다(출루율 1포인트가 장타율 1포인트보다 약 1.8배 값집니다).</p></div></div>
+    <div class="metric"><div class="abbr">OPS+<small>조정 OPS</small></div><div class="body">
+      <div class="formula">100 × ( <span class="frac"><span>OBP</span><span>lgOBP</span></span> + <span class="frac"><span>SLG</span><span>lgSLG</span></span> − 1 )</div>
+      <p>리그 평균과 구장 효과를 보정해 100을 평균으로 맞춥니다. 120이면 리그 평균보다 20% 좋다는 뜻입니다.</p></div></div>
+    <div class="metric"><div class="abbr">ISO<small>순수 장타율</small></div><div class="body">
+      <div class="formula">SLG − AVG</div>
+      <p>단타를 뺀 순수한 장타력입니다. .140 안팎이 평균, .200 이상이면 장타자입니다.</p></div></div>
+    <div class="metric"><div class="abbr">BABIP<small>인플레이 타구 타율</small></div><div class="body">
+      <div class="formula"><span class="frac"><span>H − HR</span><span>AB − K − HR + SF</span></span></div>
+      <p>리그 평균은 .300 근처입니다. 타자는 타구 질과 주력에 따라 고유 수준이 있지만, 통산치에서 크게 벗어난 시즌은 운이 섞였을 가능성이 높습니다.</p></div></div>
+    <div class="metric"><div class="abbr">wOBA<small>가중 출루율</small></div><div class="body">
+      <div class="formula"><span class="frac"><span>0.69·uBB + 0.72·HBP + 0.89·1B + 1.27·2B + 1.62·3B + 2.10·HR</span><span>AB + BB − IBB + SF + HBP</span></span></div>
+      <p>각 이벤트를 실제 득점 가치만큼 가중한 지표입니다. 출루율과 같은 눈금으로 읽도록 조정되어 있어 .320 정도가 평균입니다. 가중치는 시즌마다 조금씩 달라집니다(uBB는 고의4구를 뺀 볼넷).</p></div></div>
+    <div class="metric"><div class="abbr">wRC+<small>조정 득점 창출력</small></div><div class="body">
+      <div class="formula">wOBA → 득점 환산 → 구장·리그 보정 → 리그 평균 = 100</div>
+      <p>타격 능력을 한 숫자로 말해야 한다면 이 지표를 씁니다. 150이면 리그 평균 타자보다 타석당 50% 더 많은 득점을 만들었다는 뜻입니다.</p></div></div>
+    <div class="metric"><div class="abbr">BB% · K%<small>볼넷·삼진 비율</small></div><div class="body">
+      <div class="formula">BB ÷ PA &nbsp;,&nbsp; K ÷ PA</div>
+      <p>타석 접근법을 보여 주며, 적은 표본에서도 가장 빨리 안정되는 지표입니다.</p></div></div>
+  </div>
+</section>
+
+<section id="pitch">
+  <h2>투구 지표 <small>Pitching</small></h2>
+  <div class="prose"><p>평균자책점에는 수비, 구장, 불펜의 승계주자 처리, 운이 섞여 있습니다. 세이버메트릭스는 투수가 직접 통제하는 결과만 골라 봅니다.</p></div>
+  <div class="metrics">
+    <div class="metric"><div class="abbr">WHIP<small>이닝당 출루 허용</small></div><div class="body">
+      <div class="formula"><span class="frac"><span>BB + H</span><span>IP</span></span></div>
+      <p>1.30 안팎이 평균, 1.10 이하면 우수합니다. 피안타가 포함되므로 수비와 운의 영향은 그대로 남습니다.</p></div></div>
+    <div class="metric"><div class="abbr">K/9 · BB/9<small>9이닝당 삼진·볼넷</small></div><div class="body">
+      <div class="formula">9 × K ÷ IP &nbsp;,&nbsp; 9 × BB ÷ IP</div>
+      <p>최근에는 타자 수를 분모로 한 K%, BB%, 그리고 둘의 차이인 K−BB%를 더 선호합니다. K−BB%는 간단한데도 미래 성적 예측력이 좋습니다.</p></div></div>
+    <div class="metric"><div class="abbr">FIP<small>수비 무관 평균자책</small></div><div class="body">
+      <div class="formula"><span class="frac"><span>13×HR + 3×(BB + HBP) − 2×K</span><span>IP</span></span> + 상수(약 3.10)</div>
+      <p>홈런, 볼넷, 삼진만으로 계산한 “평균적인 수비와 운이었다면 기록했을” 자책점입니다. 상수는 리그 FIP가 리그 ERA와 같아지도록 매 시즌 정합니다. ERA가 FIP보다 훨씬 낮으면 운이 좋았을 가능성이 있습니다.</p></div></div>
+    <div class="metric"><div class="abbr">xFIP<small>기대 FIP</small></div><div class="body">
+      <div class="formula">FIP에서 HR을 (뜬공 × 리그 평균 HR/FB)로 대체</div>
+      <p>뜬공이 홈런이 되는 비율도 변동이 크다고 보고 리그 평균으로 바꿔 넣습니다.</p></div></div>
+    <div class="metric"><div class="abbr">SIERA<small>기술 기반 ERA 추정</small></div><div class="body">
+      <p>삼진, 볼넷, 땅볼 비율과 그 상호작용까지 넣은 회귀식입니다. ERA 추정 지표 가운데 다음 시즌 예측력이 가장 좋은 편입니다.</p></div></div>
+    <div class="metric"><div class="abbr">ERA+ · ERA−<small>조정 평균자책</small></div><div class="body">
+      <div class="formula">ERA+ = 100 × lgERA ÷ ERA (구장 보정)</div>
+      <p>ERA+는 높을수록, ERA−와 FIP−는 낮을수록 좋습니다. 둘 다 100이 평균입니다.</p></div></div>
+    <div class="metric"><div class="abbr">LOB%<small>잔루율</small></div><div class="body">
+      <p>내보낸 주자를 홈에 들이지 않은 비율로, 리그 평균은 72% 안팎입니다. 여기서 크게 벗어난 값은 대개 평균으로 돌아옵니다.</p></div></div>
+  </div>
+</section>
+
+<section id="field">
+  <h2>수비·주루 지표 <small>Fielding &amp; Baserunning</small></h2>
+  <div class="prose"><p>수비율(실책 기준)은 닿지 못한 타구를 벌하지 않습니다. 현대 수비 지표는 “평균적인 야수라면 잡았을 타구인가”를 묻고, 그 차이를 득점으로 환산합니다.</p></div>
+  <div class="metrics">
+    <div class="metric"><div class="abbr">UZR<small>Ultimate Zone Rating</small></div><div class="body"><p>타구를 구역·속도별로 나누어 평균 야수 대비 막아낸 점수를 계산합니다. 범위, 송구, 병살, 실책 요소로 나뉩니다.</p></div></div>
+    <div class="metric"><div class="abbr">DRS<small>Defensive Runs Saved</small></div><div class="body"><p>같은 목적의 다른 구현입니다. +10이면 한 시즌에 평균보다 10점을 더 막았다는 뜻이며, +15 이상이면 골드글러브급입니다.</p></div></div>
+    <div class="metric"><div class="abbr">OAA<small>Outs Above Average</small></div><div class="body"><p>스탯캐스트 기반입니다. 타구마다 야수가 가야 할 거리와 주어진 시간으로 포구 확률을 구하고, 실제 결과와의 차이를 누적합니다.</p></div></div>
+    <div class="metric"><div class="abbr">Framing<small>포수 프레이밍</small></div><div class="body"><p>경계선 투구를 스트라이크로 판정받게 만든 정도입니다. 자동 볼 판정(ABS)을 쓰는 리그에서는 의미가 사라집니다.</p></div></div>
+    <div class="metric"><div class="abbr">BsR<small>주루 득점 기여</small></div><div class="body"><p>도루(wSB), 추가 진루(UBR), 병살 회피를 합쳐 평균 대비 득점으로 나타냅니다.</p></div></div>
+  </div>
+</section>
+
+<section id="war">
+  <h2>종합 지표 <small>WAR · Pythagorean · WPA</small></h2>
+  <div class="metrics">
+    <div class="metric"><div class="abbr">WAR<small>대체 선수 대비 승리 기여</small></div><div class="body">
+      <div class="formula"><span class="frac"><span>타격 + 주루 + 수비 + 포지션 조정 + 리그 조정 + 대체 수준</span><span>승리당 득점 (약 10)</span></span></div>
+      <p>모든 기여를 득점으로 더한 뒤 승수로 바꿉니다. 유격수·포수처럼 어려운 포지션은 가산점을 받습니다. 대체 선수로만 구성한 팀은 승률 약 .294(162경기 48승)로 가정합니다.</p>
+      <p>계산 주체에 따라 값이 다릅니다. 투수의 경우 FanGraphs(fWAR)는 FIP, Baseball-Reference(bWAR)는 실제 실점을 기반으로 하고, 수비 지표도 서로 다릅니다. 0.5승 정도의 차이는 오차 범위로 보는 것이 안전합니다.</p></div></div>
+    <div class="metric"><div class="abbr">Pythag<small>피타고리안 기대 승률</small></div><div class="body">
+      <div class="formula"><span class="frac"><span>득점<sup>1.83</sup></span><span>득점<sup>1.83</sup> + 실점<sup>1.83</sup></span></span></div>
+      <p>빌 제임스의 원래 식은 지수 2였고, 1.83이 실제 승률에 더 잘 맞습니다. 실제 승률이 기대 승률보다 훨씬 높은 팀은 접전 운이 좋았던 경우가 많아 이후 성적이 내려오는 경향이 있습니다.</p></div></div>
+    <div class="metric"><div class="abbr">WPA<small>승리 확률 기여</small></div><div class="body">
+      <p>플레이 전후의 팀 승리 확률 변화입니다. 9회 동점 홈런이 1회 홈런보다 훨씬 크게 잡힙니다. 경기의 이야기를 설명하는 데는 좋지만, 상황은 선수가 고르지 못하므로 실력 평가에는 적합하지 않습니다.</p></div></div>
+    <div class="metric"><div class="abbr">LI<small>레버리지 인덱스</small></div><div class="body">
+      <p>그 순간이 승패에 얼마나 중요한지 나타냅니다. 평균은 1.0이고, 마무리 투수는 보통 1.8 이상의 상황에서 던집니다. 불펜 운용 평가에 쓰입니다.</p></div></div>
+  </div>
+</section>
+
+<section id="statcast">
+  <h2>트래킹 데이터 <small>Statcast</small></h2>
+  <div class="prose"><p>결과를 세던 시대에서 과정을 직접 재는 시대로 넘어왔습니다. 타구가 안타였는지보다 얼마나 잘 맞았는지를 봅니다.</p></div>
+  <div class="scroll"><table>
+    <thead><tr><th>지표</th><th>뜻</th><th>기준</th></tr></thead>
+    <tbody>
+      <tr><td>타구 속도 (Exit Velocity)</td><td>배트를 떠나는 순간의 속도</td><td>95 mph(약 153 km/h) 이상이면 강한 타구(Hard-hit)</td></tr>
+      <tr><td>발사각 (Launch Angle)</td><td>타구의 수직 각도</td><td>10–25° 라인드라이브, 25–35° 장타에 유리한 뜬공</td></tr>
+      <tr><td>배럴 (Barrel)</td><td>속도와 각도가 이상적으로 결합한 타구</td><td>98 mph 이상에서 26–30°로 시작해, 빠를수록 허용 각도가 넓어짐</td></tr>
+      <tr><td>xBA · xwOBA</td><td>타구 질(과 주력)로 추정한 기대 타율·기대 wOBA</td><td>실제 값과의 차이로 운의 크기를 가늠</td></tr>
+      <tr><td>스프린트 스피드</td><td>가장 빠른 1초 구간의 주력</td><td>리그 평균 27 ft/s, 30 ft/s 이상이면 최상위</td></tr>
+      <tr><td>회전수 · 무브먼트</td><td>공의 분당 회전과 수평·수직 변화량</td><td>구종 설계와 Stuff+ 모델의 입력</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="calc">
+  <h2>계산기 <small>Calculators</small></h2>
+  <div class="calc">
+    <div class="calc-head"><h3>타격</h3><span class="tag">예시 값 · 고쳐 쓰세요</span></div>
+    <div class="fields" id="bat-in">
+      <label>타수 AB<input id="b-ab" type="number" min="0" value="520"></label>
+      <label>안타 H<input id="b-h" type="number" min="0" value="156"></label>
+      <label>2루타<input id="b-2b" type="number" min="0" value="32"></label>
+      <label>3루타<input id="b-3b" type="number" min="0" value="3"></label>
+      <label>홈런 HR<input id="b-hr" type="number" min="0" value="28"></label>
+      <label>볼넷 BB<input id="b-bb" type="number" min="0" value="70"></label>
+      <label>고의4구<input id="b-ibb" type="number" min="0" value="5"></label>
+      <label>사구 HBP<input id="b-hbp" type="number" min="0" value="6"></label>
+      <label>희비 SF<input id="b-sf" type="number" min="0" value="5"></label>
+      <label>삼진 K<input id="b-k" type="number" min="0" value="120"></label>
+    </div>
+    <div class="out" id="bat-out"></div>
+  </div>
+  <div class="calc">
+    <div class="calc-head"><h3>투구 (FIP)</h3><span class="tag">예시 값</span></div>
+    <div class="fields" id="pit-in">
+      <label>이닝 IP<input id="p-ip" type="number" min="0" step="0.1" value="180"></label>
+      <label>피홈런<input id="p-hr" type="number" min="0" value="18"></label>
+      <label>볼넷 BB<input id="p-bb" type="number" min="0" value="45"></label>
+      <label>사구 HBP<input id="p-hbp" type="number" min="0" value="5"></label>
+      <label>삼진 K<input id="p-k" type="number" min="0" value="190"></label>
+      <label>상수<input id="p-c" type="number" step="0.01" value="3.10"></label>
+    </div>
+    <div class="out" id="pit-out"></div>
+    <p class="note">이닝은 야구 표기를 따릅니다. 180.1은 180⅓이닝, 180.2는 180⅔이닝입니다.</p>
+  </div>
+  <div class="calc">
+    <div class="calc-head"><h3>피타고리안 기대 승률</h3><span class="tag">예시 값</span></div>
+    <div class="fields" id="py-in">
+      <label>득점<input id="y-rs" type="number" min="0" value="750"></label>
+      <label>실점<input id="y-ra" type="number" min="0" value="650"></label>
+      <label>경기 수<input id="y-g" type="number" min="1" value="144"></label>
+      <label>지수<input id="y-e" type="number" step="0.01" value="1.83"></label>
+    </div>
+    <div class="out" id="py-out"></div>
+  </div>
+</section>
+
+<section id="scale">
+  <h2>기준표 <small>Rules of thumb</small></h2>
+  <div class="prose"><p class="note">MLB 기준의 대략적인 눈금입니다. 리그와 시즌의 득점 환경에 따라 달라지므로, 비율 지표는 가능하면 100 기준 조정 지표와 함께 보세요.</p></div>
+  <div class="scroll"><table>
+    <thead><tr><th>평가</th><th class="num">wOBA</th><th class="num">wRC+ / OPS+</th><th class="num">FIP</th><th class="num">WAR (시즌)</th></tr></thead>
+    <tbody>
+      <tr><td>MVP급</td><td class="num">.400+</td><td class="num">160+</td><td class="num">2.90 이하</td><td class="num">6+</td></tr>
+      <tr><td>올스타급</td><td class="num">.370</td><td class="num">140</td><td class="num">3.20</td><td class="num">4–6</td></tr>
+      <tr><td>평균 이상 주전</td><td class="num">.340</td><td class="num">115</td><td class="num">3.50</td><td class="num">3–4</td></tr>
+      <tr class="hit"><td>리그 평균</td><td class="num">.320</td><td class="num">100</td><td class="num">4.00 안팎</td><td class="num">2</td></tr>
+      <tr><td>평균 이하</td><td class="num">.310</td><td class="num">80</td><td class="num">4.40</td><td class="num">1–2</td></tr>
+      <tr><td>백업</td><td class="num">.300</td><td class="num">75</td><td class="num">4.70</td><td class="num">0–1</td></tr>
+      <tr><td>대체 수준</td><td class="num">.290 이하</td><td class="num">60 이하</td><td class="num">5.00+</td><td class="num">0 이하</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="caveat">
+  <h2>주의점 <small>Caveats</small></h2>
+  <div class="principles">
+    <div><h3>표본 크기</h3><p>지표마다 믿을 만해지는 시점이 다릅니다. 삼진율은 60타석 정도면 윤곽이 잡히지만, BABIP는 한 시즌(약 800 인플레이 타구)으로도 부족합니다.</p></div>
+    <div><h3>기술(記述)과 예측은 다르다</h3><p>ERA와 WPA는 일어난 일을 설명하고, FIP·xwOBA·SIERA는 앞으로를 예측합니다. 시상과 계약은 서로 다른 지표를 요구합니다.</p></div>
+    <div><h3>수비 지표의 잡음</h3><p>수비 지표는 한 시즌 값의 변동이 큽니다. 최소 2–3시즌을 묶어 보고, 여러 지표가 같은 방향을 가리키는지 확인하세요.</p></div>
+    <div><h3>리그가 다르면 계수도 다르다</h3><p>wOBA 가중치, FIP 상수, 기대 득점표는 리그와 시즌마다 다시 계산해야 합니다. KBO 기록은 STATIZ, KBReport 같은 사이트가 자체 계수로 제공합니다.</p></div>
+  </div>
+</section>
+
+<footer>
+  <p>더 읽을 곳</p>
+  <ul>
+    <li><a href="https://library.fangraphs.com/" target="_blank" rel="noopener">FanGraphs Sabermetrics Library</a> — 지표별 정의와 계산 과정</li>
+    <li><a href="https://www.mlb.com/glossary" target="_blank" rel="noopener">MLB Glossary</a> — 스탯캐스트 용어 포함</li>
+    <li><a href="https://www.baseball-reference.com/about/war_explained.shtml" target="_blank" rel="noopener">Baseball-Reference WAR Explained</a></li>
+    <li><a href="https://sabr.org/sabermetrics" target="_blank" rel="noopener">SABR — A Guide to Sabermetric Research</a></li>
+  </ul>
+  <p>기대 득점표는 톰 탱고가 공개한 MLB 2010–2015 값이며, wOBA 가중치와 FIP 상수는 대표적인 근삿값입니다.</p>
+</footer>
+</div>
+
+<script>
+(function(){
+  // 키: 1루·2루·3루 주자 유무
+  var RE={"000":[.481,.254,.098],"100":[.859,.509,.224],"010":[1.100,.664,.319],"001":[1.350,.950,.353],
+          "110":[1.437,.884,.429],"101":[1.784,1.130,.478],"011":[1.964,1.376,.580],"111":[2.292,1.541,.752]};
+  var NAMES={"000":"주자 없음","100":"1루","010":"2루","001":"3루","110":"1·2루","101":"1·3루","011":"2·3루","111":"만루"};
+  var OUTS=["무사","1사","2사"];
+  var st={b:[0,0,0],o:0};
+  var tbody=document.querySelector("#re-table tbody");
+  Object.keys(RE).forEach(function(k){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td>"+NAMES[k]+"</td>"+RE[k].map(function(v,i){return '<td class="num" data-k="'+k+'" data-o="'+i+'">'+v.toFixed(3)+"</td>";}).join("");
+    tbody.appendChild(tr);
+  });
+  function render(){
+    var k=st.b.join("");
+    document.getElementById("re-val").textContent=RE[k][st.o].toFixed(3);
+    document.getElementById("re-label").textContent=OUTS[st.o]+" "+NAMES[k];
+    document.querySelectorAll(".diamond .base").forEach(function(el){
+      var on=!!st.b[el.dataset.b-1]; el.classList.toggle("on",on); el.setAttribute("aria-pressed",on);
+    });
+    document.querySelectorAll(".outs button").forEach(function(el){el.setAttribute("aria-pressed",+el.dataset.o===st.o);});
+    tbody.querySelectorAll("td.num").forEach(function(td){td.classList.toggle("cur",td.dataset.k===k&&+td.dataset.o===st.o);});
+  }
+  document.querySelectorAll(".diamond .base").forEach(function(el){
+    function tog(){var i=el.dataset.b-1; st.b[i]=st.b[i]?0:1; render();}
+    el.addEventListener("click",tog);
+    el.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();tog();}});
+  });
+  document.querySelectorAll(".outs button").forEach(function(el){el.addEventListener("click",function(){st.o=+el.dataset.o;render();});});
+  tbody.addEventListener("click",function(e){
+    var td=e.target.closest("td.num"); if(!td)return;
+    st.b=td.dataset.k.split("").map(Number); st.o=+td.dataset.o; render();
+  });
+  render();
+
+  function n(id){var v=parseFloat(document.getElementById(id).value);return isFinite(v)?v:0;}
+  function avg3(x){return isFinite(x)?x.toFixed(3).replace(/^0\./,"."):"–";}
+  function fill(id,pairs){
+    document.getElementById(id).innerHTML=pairs.map(function(p){return '<div><span class="k">'+p[0]+'</span><span class="v">'+p[1]+"</span></div>";}).join("");
+  }
+  function bat(){
+    var ab=n("b-ab"),h=n("b-h"),d=n("b-2b"),t=n("b-3b"),hr=n("b-hr"),bb=n("b-bb"),ibb=n("b-ibb"),hbp=n("b-hbp"),sf=n("b-sf"),k=n("b-k");
+    var s=h-d-t-hr, pa=ab+bb+hbp+sf;
+    var avg=h/ab, obp=(h+bb+hbp)/pa, slg=(s+2*d+3*t+4*hr)/ab;
+    var babip=(h-hr)/(ab-k-hr+sf);
+    var woba=(.69*(bb-ibb)+.72*hbp+.89*s+1.27*d+1.62*t+2.10*hr)/(ab+bb-ibb+sf+hbp);
+    fill("bat-out",[["AVG",avg3(avg)],["OBP",avg3(obp)],["SLG",avg3(slg)],["OPS",avg3(obp+slg)],["ISO",avg3(slg-avg)],["BABIP",avg3(babip)],["wOBA",avg3(woba)],
+      ["BB%",isFinite(bb/pa)?(100*bb/pa).toFixed(1):"–"],["K%",isFinite(k/pa)?(100*k/pa).toFixed(1):"–"]]);
+  }
+  function pit(){
+    var raw=n("p-ip"), whole=Math.floor(raw), frac=Math.round((raw-whole)*10);
+    var ip=whole+(frac===1?1/3:frac===2?2/3:raw-whole);
+    var hr=n("p-hr"),bb=n("p-bb"),hbp=n("p-hbp"),k=n("p-k"),c=n("p-c");
+    var fip=(13*hr+3*(bb+hbp)-2*k)/ip+c;
+    function f(x){return isFinite(x)?x.toFixed(2):"–";}
+    fill("pit-out",[["FIP",f(fip)],["K/9",f(9*k/ip)],["BB/9",f(9*bb/ip)],["HR/9",f(9*hr/ip)],["K/BB",f(k/bb)]]);
+  }
+  function py(){
+    var rs=n("y-rs"),ra=n("y-ra"),g=n("y-g"),e=n("y-e");
+    var p=Math.pow(rs,e)/(Math.pow(rs,e)+Math.pow(ra,e));
+    var ok=isFinite(p), w=Math.round(p*g);
+    fill("py-out",[["기대 승률",avg3(p)],["기대 승패",ok?w+"–"+(g-w):"–"],["득실차",(rs-ra>0?"+":"")+(rs-ra)]]);
+  }
+  [["bat-in",bat],["pit-in",pit],["py-in",py]].forEach(function(x){document.getElementById(x[0]).addEventListener("input",x[1]);x[1]();});
+})();
+</script>
+
+</body></html>
